@@ -30,8 +30,7 @@ export default function App() {
     }
   };
 
-  return (        keyExtractor={(item, index) => index.toString()}
-
+  return (
     <View style={styles.container}>
       <Text style={styles.title}>Polish Vocabulary</Text>
       <TextInput placeholder="Word" value={word} onChangeText={setWord} style={styles.input} />
@@ -40,6 +39,7 @@ export default function App() {
       <Button title="Save Word" onPress={saveWord} />
       <FlatList
         data={words}
+        keyExtractor={(item, index) => index.toString()}  // Added keyExtractor here
         renderItem={({ item }) => (
           <View style={styles.wordContainer}>
             <Text style={styles.word}>{item.word}</Text>

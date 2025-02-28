@@ -1,0 +1,20 @@
+{
+    "name": "learn-polish",
+    "version": "1.0.0",
+    "description": "A project to learn Polish",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "@react-native-async-storage/async-storage": "^2.1.1",
+        "react": "latest",
+        "react-native": "latest"
+    },
+    "devDependencies": {
+        "@react-native-community/cli": "latest",
+        "@react-native/metro-config": "^0.78.0"
+    },
+    "author": "Sebek",
+    "license": "ISC"
+}
