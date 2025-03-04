@@ -14,8 +14,8 @@ export default function App() {
   }, []);
 
   const saveWord = async () => {
-    if (!word || !meaning || !example) return;
-    const newWord = { word, meaning, example };
+    if (!word || !meaning) return;
+    const newWord = { word, meaning, example: example || "No example" };
     const updatedWords = [...words, newWord];
     setWords(updatedWords);
     await AsyncStorage.setItem('words', JSON.stringify(updatedWords));
