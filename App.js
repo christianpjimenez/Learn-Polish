@@ -50,6 +50,10 @@ const AddWordScreen = ({ route }) => {
 // 📜 Screen for Viewing Saved Words
 const SavedWordsScreen = () => {
   const [words, setWords] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editedWord, setEditedWord] = useState('');
+  const [editedMeaning, setEditedMeaning] = useState('');
+  const [editedExample, setEditedExample] = useState('');
 
   useEffect(() => {
     const loadWords = async () => {
@@ -59,23 +63,74 @@ const SavedWordsScreen = () => {
     loadWords();
   }, []);
 
+  const startEditing = (index, word) => {
+    setEditingIndex(index);
+    setEditedWord(word.word);
+    setEditedMeaning(word.meaning);
+    setEditedExample(word.example);
+  };
+
+  const saveEdit = async () => {
+    if (editedWord.trim() === '' || editedMeaning.trim() === '') return;
+
+    const updatedWords = [...words];
+    updatedWords[editingIndex] = { 
+      word: editedWord, 
+      meaning: editedMeaning, 
+      example: editedExample || 'No example' 
+    };
+
+    setWords(updatedWords);
+    await AsyncStorage.setItem('words', JSON.stringify(updatedWords));
+    setEditingIndex(null);
+  };
+
   return (
     <View style={styles.container}> 
-      <Text>Saved Words</Text>
+      <Text style={styles.title}>Saved Words</Text>
       <FlatList
         data={words}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View>
-            <Text style={styles.word}>{item.word}</Text>
-            <Text>{item.meaning}</Text>
-            <Text>{item.example}</Text>
+        renderItem={({ item, index }) => (
+          <View style={styles.wordContainer}>
+            {editingIndex === index ? (
+              <>
+                <TextInput 
+                  value={editedWord} 
+                  onChangeText={setEditedWord} 
+                  style={styles.input} 
+                />
+                <TextInput 
+                  value={editedMeaning} 
+                  onChangeText={setEditedMeaning} 
+                  style={styles.input} 
+                />
+                <TextInput 
+                  value={editedExample} 
+                  onChangeText={setEditedExample} 
+                  style={styles.input} 
+                />
+                <TouchableOpacity onPress={saveEdit} style={styles.button}>
+                  <Text style={styles.buttonText}>Save</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Text style={styles.word}>{item.word}</Text>
+                <Text>{item.meaning}</Text>
+                <Text style={styles.example}>{item.example}</Text>
+                <TouchableOpacity onPress={() => startEditing(index, item)} style={styles.editButton}>
+                  <Text style={styles.buttonText}>Edit</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         )}
       />
     </View>
   );
 };
+
 
 // 🏠 Main App with Bottom Navigation
 export default function App() {
